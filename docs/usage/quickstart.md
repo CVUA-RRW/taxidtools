@@ -34,6 +34,8 @@ Speeding up this process will be discussed in the [advanced usage](advances.md) 
 The nodes.dmp and rankedlineage.dmp are the only files you need
 from the taxdump archive. 
 
+Note that you can skip some of the taxonomy divisions while reading the taxonomy file by using the `skip_synth` and `skip_env` arguments.
+
 ## Accessing node infos
 
 A Taxonomy object contains a bunch of nodes that represent

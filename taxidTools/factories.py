@@ -8,7 +8,13 @@ from .Taxonomy import Taxonomy
 from .Node import Node, DummyNode, _BaseNode, MergedNode
 
 
-def read_taxdump(nodes: str, rankedlineage: str, merged: Optional[str] = None) -> Taxonomy:
+def read_taxdump(
+    nodes: str, rankedlineage: str,
+    merged: Optional[str] = None,
+    skip_synth: Optional[bool] = False,
+    skip_env: Optional[bool] = False,
+    skip_nodiv: Optional[bool] = True,
+    ) -> Taxonomy:
     """
     Read a Taxonomy from the NCBI`s taxdump files
 
@@ -19,7 +25,13 @@ def read_taxdump(nodes: str, rankedlineage: str, merged: Optional[str] = None) -
     rankedlineage: str
         Path to the rankedlineage.dmp file
     merged: str, optional
-        Path tothe merged.mp file
+        Path to the merged.mp file
+    skip_synth: bool, optional
+        Skip taxa in the 'Synthetic and Chimeric' division
+    skip_env: bool, optional
+        Skip taxa in the 'Environmental samples' division
+    skip_nodiv: bool, optional
+        Skip taxa in the 'Unassigned' division
 
     Returns
     -------
@@ -28,6 +40,7 @@ def read_taxdump(nodes: str, rankedlineage: str, merged: Optional[str] = None) -
     Examples
     --------
     >>> tax = read_taxdump("nodes.dmp', 'rankedlineage.dmp')
+    >>> tax = read_taxdump("nodes.dmp', 'rankedlineage.dmp', merged='merged.dmp', skip_env=True, skip_synth=True)
 
     See Also
     --------
@@ -36,8 +49,19 @@ def read_taxdump(nodes: str, rankedlineage: str, merged: Optional[str] = None) -
     txd = {}
     parent_dict = {}
 
+    # Skipping divisions
+    skip_list = []
+    if skip_synth:
+        skip_list += [7]
+    if skip_env:
+        skip_list += [11]
+    if skip_nodiv:
+        skip_list += [8]
+
     # Creating nodes
     for line in _parse_dump(nodes):
+        if line[4] in skip_list:
+            continue
         txd[line[0]] = Node(taxid=line[0], rank=str(line[2]))
         parent_dict[str(line[0])] = line[1]  # storing parent id
 

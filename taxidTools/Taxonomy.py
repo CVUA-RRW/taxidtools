@@ -84,7 +84,7 @@ class Taxonomy(UserDict):
 
     Or from the taxdump files:
 
-    >>> tax = Taxonomy.read_taxdump("nodes.dmp', 'rankedlineage.dmp', 'merged.dmp')
+    >>> tax = read_taxdump("nodes.dmp', 'rankedlineage.dmp', 'merged.dmp')
     """
 
     def __init__(self, *args, **kwargs) -> None:
