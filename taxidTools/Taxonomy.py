@@ -714,7 +714,17 @@ class Taxonomy(UserDict):
         nodes.extend(tax.listDescendant(taxid))
 
         # Update taxonomy
+        valid_ids = {node.taxid for node in nodes}
+
+        # Also keep mergedNodes if their pointer is still in the new taxonomy!
+        merged_nodes = {
+            taxid: node
+            for taxid, node in self.data.items()
+            if isinstance(node, MergedNode) and node.new_node in valid_ids
+        }
+
         tax.data = {node.taxid: node for node in nodes}
+        tax.data.update(merged_nodes)
 
         if not inplace:
             return tax
