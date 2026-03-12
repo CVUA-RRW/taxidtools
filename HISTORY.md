@@ -1,5 +1,9 @@
 # Release History
 
+## 3.2.0
+
+* Added option to filter the taxdump to skip Synthetic and Chimeric divsion, Envrionmental division and Unassigned division.
+
 ## 3.1.1
 
 **Bugfix**
